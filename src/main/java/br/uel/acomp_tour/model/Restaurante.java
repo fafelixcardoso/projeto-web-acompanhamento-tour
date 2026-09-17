@@ -57,7 +57,6 @@ public class Restaurante {
     public Float getAvaliacao(){ return avaliacao; }
     public LocalDate getDataVisita(){ return dataVisita; }
 
-    public void setId(Long id){ this.id = id; }
     public void setNome(String nome){ this.nome = nome; }
     public void setEndereco(String endereco){ this.endereco = endereco; }
     public void setComentario(String comentario){ this.comentario = comentario; }
