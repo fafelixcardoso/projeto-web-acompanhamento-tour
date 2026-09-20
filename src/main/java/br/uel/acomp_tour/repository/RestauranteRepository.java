@@ -1,6 +1,7 @@
 package br.uel.acomp_tour.repository;
 
 import br.uel.acomp_tour.model.Restaurante;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,20 +18,23 @@ public interface RestauranteRepository
             "SELECT r FROM Restaurante r " +
                 "WHERE (:id IS NULL OR r.id = :id) " +
                 "AND (:nome IS NULL OR r.nome LIKE CONCAT('%', :nome, '%')) " +
-                "AND (:avaliacao IS NULL OR r.avaliacao = :avaliacao) " +
+                "AND (:minAvaliacao IS NULL OR r.avaliacao >= :minAvaliacao) " +
+                "AND (:maxAvaliacao IS NULL OR r.avaliacao <= :maxAvaliacao) " +
                 "AND (:minEconomia IS NULL OR r.economia >= :minEconomia) " +
                 "AND (:maxEconomia IS NULL OR r.economia <= :maxEconomia) " +
                 "AND (:minVisita IS NULL OR r.dataVisita >= :minVisita) " +
                 "AND (:maxVisita IS NULL OR r.dataVisita <= :maxVisita)"
     )
-    List<Restaurante> buscarRestaurante(
+    List<Restaurante> buscarRestaurantes(
             @Param("id") Long id,
             @Param("nome") String nome,
-            @Param("avaliacao") Float avaliacao,
+            @Param("minAvaliacao") Float minAvaliacao,
+            @Param("maxAvaliacao") Float maxAvaliacao,
             @Param("minEconomia") Float minEconomia,
             @Param("maxEconomia") Float maxEconomia,
             @Param("minDataVisita") LocalDate minDataVisita,
-            @Param("maxDataVisita") LocalDate maxDataVisita
+            @Param("maxDataVisita") LocalDate maxDataVisita,
+            Sort sort // Parece que só de add isso aq já funciona
     );
 
     Boolean existsByNome(String nome);

@@ -18,34 +18,35 @@ public class RestauranteService {
         return restauranteRepository.findAll();
     }
 
-    // Ordena restaurantes
-    public List<Restaurante> listarOrdenado(String ordem, String atributo){
-        Sort sort_atr =  Sort.by(atributo);
-        Sort sort_atr_ordem = ordem.equals("desc") ? sort_atr.descending() : sort_atr.ascending();
-
-        return restauranteRepository.findAll(sort_atr_ordem);
-    }
-
     // Busca restaurantes
     public List<Restaurante> buscar(
             Long id,
             String nome,
-            Float avaliacao,
+            Float minAvaliacao,
+            Float maxAvaliacao,
             Float minEconomia,
             Float maxEconomia,
             LocalDate minDataVisita,
-            LocalDate maxDataVisita
+            LocalDate maxDataVisita,
+            String ordem,
+            String atributo
     ){
-        String nomeValidado = nome.isBlank() ? null : nome;
+        String nomeValidado = (nome != null && !nome.isBlank()) ? nome : null;
 
-        return restauranteRepository.buscarRestaurante(
+        // Ordenação
+        Sort sortAtr =  Sort.by(atributo);
+        Sort sortAtrOrdem = ordem.equals("DESC") ? sortAtr.descending() : sortAtr.ascending();
+
+        return restauranteRepository.buscarRestaurantes(
                 id,
                 nomeValidado,
-                avaliacao,
+                minAvaliacao,
+                maxAvaliacao,
                 minEconomia,
                 maxEconomia,
                 minDataVisita,
-                maxDataVisita
+                maxDataVisita,
+                sortAtrOrdem
         );
     }
 
@@ -67,6 +68,7 @@ public class RestauranteService {
         restauranteRepository.deleteById(id);
     }
 
+    // Att restaurante
     public Restaurante atualizar(Long id, Restaurante r){
 
         return restauranteRepository.findById(id).map(
@@ -85,14 +87,4 @@ public class RestauranteService {
         );
 
     }
-}
-
-    
-
-
-
-
-
-
-
 }
