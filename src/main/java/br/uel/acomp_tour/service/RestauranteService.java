@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -14,25 +14,80 @@ public class RestauranteService {
     @Autowired
     private RestauranteRepository restauranteRepository;
 
-    public List<Restaurante> listarRestaurantes(){
+    public List<Restaurante> listar(){
         return restauranteRepository.findAll();
     }
 
-    // Se tu achar q ficou mt feio pd mudar
-    public List<Restaurante> listarRestaurantesOrdenado(String ordem, String atributo){
+    // Ordena restaurantes
+    public List<Restaurante> listarOrdenado(String ordem, String atributo){
         Sort sort_atr =  Sort.by(atributo);
         Sort sort_atr_ordem = ordem.equals("desc") ? sort_atr.descending() : sort_atr.ascending();
 
         return restauranteRepository.findAll(sort_atr_ordem);
     }
 
-    public Restaurante buscarRestauranteId(Long id){
-        return restauranteRepository.findById(id).orElse(null);
+    // Busca restaurantes
+    public List<Restaurante> buscar(
+            Long id,
+            String nome,
+            Float avaliacao,
+            Float minEconomia,
+            Float maxEconomia,
+            LocalDate minDataVisita,
+            LocalDate maxDataVisita
+    ){
+        String nomeValidado = nome.isBlank() ? null : nome;
+
+        return restauranteRepository.buscarRestaurante(
+                id,
+                nomeValidado,
+                avaliacao,
+                minEconomia,
+                maxEconomia,
+                minDataVisita,
+                maxDataVisita
+        );
     }
 
-    public List<Restaurante> buscarRestaurantePorNome(String nome){
-        return restauranteRepository.findByNomeContainingIgnoreCase(nome);
+    // Add restaurante
+    public Restaurante adicionar(Restaurante r){
+        if(restauranteRepository.existsByNome(r.getNome())){
+            throw new RuntimeException("Restaurante já cadastrado!");
+        }
+
+        return restauranteRepository.save(r);
     }
+
+    // Remover restaurante
+    public void remover(Long id) {
+        if (!restauranteRepository.existsById(id)) {
+            throw new RuntimeException("Restaurante não encontrado com id: " + id);
+        }
+
+        restauranteRepository.deleteById(id);
+    }
+
+    public Restaurante atualizar(Long id, Restaurante r){
+
+        return restauranteRepository.findById(id).map(
+                r_antigo -> {
+                    r_antigo.setNome(r.getNome());
+                    r_antigo.setEndereco(r.getEndereco());
+                    r_antigo.setComentario(r.getComentario());
+                    r_antigo.setEconomia(r.getEconomia());
+                    r_antigo.setAvaliacao(r.getAvaliacao());
+                    r_antigo.setDataVisita(r.getDataVisita());
+
+                    return r_antigo;
+                }
+        ).orElseThrow(
+                () -> new RuntimeException("Restaurante não encontrado com id:" + id)
+        );
+
+    }
+}
+
+    
 
 
 
