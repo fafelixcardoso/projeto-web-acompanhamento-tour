@@ -1,4 +1,4 @@
-<form th:action="@{/restaurantes/filtrar}" method="get">
+<form th:action="@{/restaurantes/inicio/filtros}" method="get">
     <h3>Filtros</h3>
     <div>
         <label for="id">Código (ID):</label>
@@ -50,32 +50,37 @@
     <a th:href="@{/restaurantes/inicio}">Limpar Filtros</a>
 </form>
 
+<a href="./novo">
+    <button type="button">Novo restaurante</button>
+</a>
+
+<p th:if="${msg}" th:text="${msg}"></p>
 
 <!-- Listagem com filtro -->
-<table th:if="${restaurantes_filtrados}">
+<table th:if="${restaurantes_filtrados != null}">
     <tr>
         <th>Id</th>
         <th>Nome</th>
         <th>Endereço</th>
         <th>Comentário</th>
         <th>Economia</th>
-        <th>Avaliacao</th>
-        <th>DataVisita</th>
+        <th>Avaliação</th>
+        <th>Data Visita</th>
+        <th>Ações</th>
     </tr>
     <tr th:each="r : ${restaurantes_filtrados}">
         <td th:text="${r.id}"></td>
         <td th:text="${r.nome}"></td>
+        <td th:text="${r.endereco}"></td>
         <td th:text="${r.comentario}"></td>
         <td th:text="${r.economia}"></td>
         <td th:text="${r.avaliacao}"></td>
         <td th:text="${r.dataVisita}"></td>
-
         <td>
-            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}"
-                  method="get">
+            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}" method="get" style="display:inline;">
                 <button type="submit">Editar</button>
             </form>
-            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post">
+            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" style="display:inline;">
                 <input type="hidden" name="_method" value="delete"/>
                 <button type="submit">Excluir</button>
             </form>
@@ -84,30 +89,30 @@
 </table>
 
 <!-- Listagem sem filtro -->
-<table th:if="${!restaurantes_filtrados}">
+<table th:if="${restaurantes_filtrados == null}">
     <tr>
         <th>Id</th>
         <th>Nome</th>
         <th>Endereço</th>
         <th>Comentário</th>
         <th>Economia</th>
-        <th>Avaliacao</th>
-        <th>DataVisita</th>
+        <th>Avaliação</th>
+        <th>Data Visita</th>
+        <th>Ações</th>
     </tr>
     <tr th:each="r : ${restaurantes}">
         <td th:text="${r.id}"></td>
         <td th:text="${r.nome}"></td>
+        <td th:text="${r.endereco}"></td>
         <td th:text="${r.comentario}"></td>
         <td th:text="${r.economia}"></td>
         <td th:text="${r.avaliacao}"></td>
         <td th:text="${r.dataVisita}"></td>
-
         <td>
-            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}"
-                  method="get">
+            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}" method="get" style="display:inline;">
                 <button type="submit">Editar</button>
             </form>
-            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post">
+            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" style="display:inline;">
                 <input type="hidden" name="_method" value="delete"/>
                 <button type="submit">Excluir</button>
             </form>

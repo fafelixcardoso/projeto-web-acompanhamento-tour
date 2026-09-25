@@ -5,6 +5,65 @@
     <title>Title</title>
 </head>
 <body>
+<form th:action="@{/restaurantes}"
+      method="post"
+      th:object="${restaurante}">
+
+    <!-- Método PUT simulado para alteração de registro -->
+    <input type="hidden" name="_method" value="put" th:if="${restaurante.id != null}"/>
+
+    <!-- ID Oculto -->
+    <input type="hidden" th:field="*{id}"/>
+
+    <!-- Nome -->
+    <div>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" th:field="*{nome}" required maxlength="150" placeholder="Ex: Outback" />
+        <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+    </div>
+
+    <!-- Endereço -->
+    <div>
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" th:field="*{endereco}" required maxlength="200" placeholder="Ex: Av. Paulista, 1000" />
+        <div th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></div>
+    </div>
+
+    <!-- Comentário -->
+    <div>
+        <label for="comentario">Comentário:</label>
+        <textarea id="comentario" th:field="*{comentario}" maxlength="500" placeholder="Observações sobre o restaurante"></textarea>
+        <div th:if="${#fields.hasErrors('comentario')}" th:errors="*{comentario}"></div>
+    </div>
+
+    <!-- Economia -->
+    <div>
+        <label for="economia">Economia (R$):</label>
+        <input type="number" step="0.01" min="0.01" id="economia" th:field="*{economia}" required placeholder="0.00" />
+        <div th:if="${#fields.hasErrors('economia')}" th:errors="*{economia}"></div>
+    </div>
+
+    <!-- Avaliação -->
+    <div>
+        <label for="avaliacao">Avaliação (0 a 5):</label>
+        <input type="number" step="0.1" min="0" max="5" id="avaliacao" th:field="*{avaliacao}" required placeholder="5.0" />
+        <div th:if="${#fields.hasErrors('avaliacao')}" th:errors="*{avaliacao}"></div>
+    </div>
+
+    <!-- Data da Visita -->
+    <div>
+        <label for="dataVisita">Data da Visita:</label>
+        <input type="date" id="dataVisita" th:field="*{dataVisita}" />
+        <div th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
+    </div>
+
+    <!-- Botões -->
+    <div>
+        <button type="submit" th:text="${restaurante.id == null} ? 'Cadastrar' : 'Atualizar'"></button>
+        <a th:href="@{/restaurantes}">Cancelar</a>
+    </div>
+</form>
+
 
 </body>
 </html>

@@ -32,6 +32,12 @@ public class RestauranteController {
         return "view/listagem";
     }
 
+    @GetMapping("/novo")
+    public String arbirFormulario (Model model){
+        model.addAttribute("restaurante", new Restaurante());
+        return "view/formulario";
+    }
+
     @GetMapping("inicio/filtros")
     public String filtrar(
             @RequestParam(required = false) Long id,
@@ -60,13 +66,31 @@ public class RestauranteController {
                 atributo
         );
 
-        if(resultados.isEmpty()) return "redirect:/inicio";
+        if(resultados.isEmpty()){
+            ra.addFlashAttribute("msg", "Nada encontrado!");
+            return "redirect:../inicio";
+        }
+
 
         ra.addFlashAttribute("restaurantes_filtrados", resultados);
-        return "redirect:/inicio";
+        ra.addFlashAttribute("msg", "Filtros aplicados!");
+        return "redirect:../inicio";
     }
 
-    // Ta basicamente faltando colocar mais funções aq e continuar o html de formulario.
-    // A logica só vms conseguir validar qnd plmns o post tiver pronto aq
+    @PostMapping
+    public String cadastrar(@Valid @ModelAttribute Restaurante restaurante,
+                            BindingResult erros, RedirectAttributes ra) {
+        if (erros.hasErrors()) {
+            return "view/formulario";
+        }
+
+        restauranteService.adicionar(restaurante);
+        ra.addFlashAttribute("msg", "Restaurante cadastrado!");
+        return "redirect:restaurantes/inicio";
+    }
+
+
+    // Precisamos adicionar os endpoints de delete e update para os botões do formulário funcionarem.
+    // Seria bom tbm testar as validações ou dxar isso redondinho antes de estilizarmos
 
 }

@@ -22,8 +22,8 @@ public interface RestauranteRepository
                 "AND (:maxAvaliacao IS NULL OR r.avaliacao <= :maxAvaliacao) " +
                 "AND (:minEconomia IS NULL OR r.economia >= :minEconomia) " +
                 "AND (:maxEconomia IS NULL OR r.economia <= :maxEconomia) " +
-                "AND (:minVisita IS NULL OR r.dataVisita >= :minVisita) " +
-                "AND (:maxVisita IS NULL OR r.dataVisita <= :maxVisita)"
+                "AND (:minDataVisita IS NULL OR r.dataVisita >= :minDataVisita) " +
+                "AND (:maxDataVisita IS NULL OR r.dataVisita <= :maxDataVisita)"
     )
     List<Restaurante> buscarRestaurantes(
             @Param("id") Long id,
