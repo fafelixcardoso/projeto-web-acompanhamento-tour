@@ -1,69 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Restaurante - Formulário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
-<body>
-<form th:action="@{/restaurantes}"
-      method="post"
-      th:object="${restaurante}">
-
-    <!-- Método PUT simulado para alteração de registro -->
-    <input type="hidden" name="_method" value="put" th:if="${restaurante.id != null}"/>
-
-    <!-- ID Oculto -->
-    <input type="hidden" th:field="*{id}"/>
-
-    <!-- Nome -->
-    <div>
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" th:field="*{nome}" required maxlength="150" placeholder="Ex: Outback" />
-        <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+<body style="background-color: #FFFEE6;">
+<nav class="navbar border-bottom border-body" style="background-color: #003575;" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/restaurantes/inicio}">
+            <img src="https://checkout.tourlondrina.com.br/logo/tour-4.png" alt="Logo Tour Londrina" width="65.52" height="30" class="d-inline-block align-text-top me-2">
+        </a>
     </div>
+</nav>
 
-    <!-- Endereço -->
-    <div>
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" th:field="*{endereco}" required maxlength="200" placeholder="Ex: Av. Paulista, 1000" />
-        <div th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8 mx-auto">
+            <div class="card mt-4 mb-4 shadow" style="background-color: #003575; border: none;">
+                <div class="card-body text-white">
+                    <h2 class="text-center mb-4" th:text="${restaurante.id} != null ? 'Editar Restaurante' : 'Novo Restaurante'"></h2>
+
+                    <form th:if="${restaurante.id} == null"
+                          th:action="@{/restaurantes}" method="post" th:object="${restaurante}"
+                          class="col-md-10 mx-auto mt-4">
+
+                        <div class="mb-3">
+                            <label for="nome" class="form-label"><strong>Nome*:</strong></label>
+                            <input th:field="*{nome}" id="nome" type="text" class="form-control" required maxlength="150" placeholder="Ex: Outback">
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label"><strong>Endereço*:</strong></label>
+                            <input th:field="*{endereco}" id="endereco" type="text" class="form-control" required maxlength="200" placeholder="Ex: Av. Paulista, 1000">
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comentario" class="form-label"><strong>Comentário:</strong></label>
+                            <textarea th:field="*{comentario}" id="comentario" class="form-control" maxlength="500" rows="3" placeholder="Observações sobre o restaurante"></textarea>
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('comentario')}" th:errors="*{comentario}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="economia" class="form-label"><strong>Economia (R$)*:</strong></label>
+                                <input th:field="*{economia}" id="economia" type="number" step="0.01" min="0.01" class="form-control" required placeholder="0.00">
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('economia')}" th:errors="*{economia}"></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="avaliacao" class="form-label"><strong>Avaliação (0 a 5)*:</strong></label>
+                                <input th:field="*{avaliacao}" id="avaliacao" type="number" step="0.1" min="0" max="5" class="form-control" required placeholder="5.0">
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('avaliacao')}" th:errors="*{avaliacao}"></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="dataVisita" class="form-label"><strong>Data da Visita:</strong></label>
+                                <input th:field="*{dataVisita}" id="dataVisita" type="date" class="form-control">
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="small"><p class="form-text text-white-50">* Campos obrigatórios</p></div>
+                        </div>
+
+                        <div class="d-flex gap-2 float-end">
+                            <a th:href="@{/restaurantes/inicio}" class="btn btn-outline-light">Cancelar</a>
+                            <button type="submit" class="btn text-white fw-bold" style="background-color: #589F2E;">Cadastrar</button>
+                        </div>
+                    </form>
+
+                    <form th:if="${restaurante.id} != null"
+                          th:action="@{/restaurantes}"
+                          method="post" th:object="${restaurante}"
+                          class="col-md-10 mx-auto mt-4">
+
+                        <input type="hidden" name="_method" value="put"/>
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="mb-3">
+                            <label for="nomeEdit" class="form-label"><strong>Nome*:</strong></label>
+                            <input th:field="*{nome}" id="nomeEdit" type="text" class="form-control" required maxlength="150">
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="enderecoEdit" class="form-label"><strong>Endereço*:</strong></label>
+                            <input th:field="*{endereco}" id="enderecoEdit" type="text" class="form-control" required maxlength="200">
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('endereco')}" th:errors="*{endereco}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comentarioEdit" class="form-label"><strong>Comentário:</strong></label>
+                            <textarea th:field="*{comentario}" id="comentarioEdit" class="form-control" maxlength="500" rows="3"></textarea>
+                            <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('comentario')}" th:errors="*{comentario}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="economiaEdit" class="form-label"><strong>Economia (R$)*:</strong></label>
+                                <input th:field="*{economia}" id="economiaEdit" type="number" step="0.01" min="0.01" class="form-control" required>
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('economia')}" th:errors="*{economia}"></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="avaliacaoEdit" class="form-label"><strong>Avaliação (0 a 5)*:</strong></label>
+                                <input th:field="*{avaliacao}" id="avaliacaoEdit" type="number" step="0.1" min="0" max="5" class="form-control" required>
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('avaliacao')}" th:errors="*{avaliacao}"></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="dataVisitaEdit" class="form-label"><strong>Data da Visita:</strong></label>
+                                <input th:field="*{dataVisita}" id="dataVisitaEdit" type="date" class="form-control">
+                                <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="small"><p class="form-text text-white-50">* Campos obrigatórios</p></div>
+                        </div>
+
+                        <div class="d-flex gap-2 float-end">
+                            <a th:href="@{/restaurantes/inicio}" class="btn btn-outline-light">Cancelar</a>
+                            <button type="submit" class="btn text-white fw-bold" style="background-color: #589F2E;">Atualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- Comentário -->
-    <div>
-        <label for="comentario">Comentário:</label>
-        <textarea id="comentario" th:field="*{comentario}" maxlength="500" placeholder="Observações sobre o restaurante"></textarea>
-        <div th:if="${#fields.hasErrors('comentario')}" th:errors="*{comentario}"></div>
-    </div>
-
-    <!-- Economia -->
-    <div>
-        <label for="economia">Economia (R$):</label>
-        <input type="number" step="0.01" min="0.01" id="economia" th:field="*{economia}" required placeholder="0.00" />
-        <div th:if="${#fields.hasErrors('economia')}" th:errors="*{economia}"></div>
-    </div>
-
-    <!-- Avaliação -->
-    <div>
-        <label for="avaliacao">Avaliação (0 a 5):</label>
-        <input type="number" step="0.1" min="0" max="5" id="avaliacao" th:field="*{avaliacao}" required placeholder="5.0" />
-        <div th:if="${#fields.hasErrors('avaliacao')}" th:errors="*{avaliacao}"></div>
-    </div>
-
-    <!-- Data da Visita -->
-    <div>
-        <label for="dataVisita">Data da Visita:</label>
-        <input type="date" id="dataVisita" th:field="*{dataVisita}" />
-        <div th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
-    </div>
-
-    <!-- Botões -->
-    <div>
-        <button type="submit" th:text="${restaurante.id == null} ? 'Cadastrar' : 'Atualizar'"></button>
-        <a th:href="@{/restaurantes/inicio}">Cancelar</a>
-    </div>
-</form>
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
