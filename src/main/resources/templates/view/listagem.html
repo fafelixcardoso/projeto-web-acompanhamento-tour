@@ -1,121 +1,149 @@
-<form th:action="@{/restaurantes/inicio/filtros}" method="get">
-    <h3>Filtros</h3>
-    <div>
-        <label for="id">Código (ID):</label>
-        <input type="number" id="id" name="id" placeholder="Ex: 1" />
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurantes - Lista</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body style="background-color: #FFFEE6;">
+<nav class="navbar border-bottom border-body" style="background-color: #003575;" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/restaurantes/inicio}">
+            <img src="https://checkout.tourlondrina.com.br/logo/tour-4.png" alt="Logo Tour Londrina" width="65.52" height="30" class="d-inline-block align-text-top me-2">
+        </a>
     </div>
-    <div>
-        <label for="nome">Nome do Restaurante:</label>
-        <input type="text" id="nome" name="nome" placeholder="Ex: Outback" />
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-10 mx-auto">
+
+            <div class="card mt-4 mb-4 shadow" style="background-color: #003575; border: none;">
+                <div class="card-body text-white">
+                    <h5 class="mb-3">Filtros e Ordenação</h5>
+                    <form th:action="@{/restaurantes/inicio/filtros}" method="get">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-2">
+                                <label for="nome" class="form-label small">Nome:</label>
+                                <input type="text" class="form-control form-control-sm" id="nome" name="nome" placeholder="Ex: Outback">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="minAvaliacao" class="form-label small">Avaliação (Min/Max):</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="number" step="0.5" class="form-control" id="minAvaliacao" name="minAvaliacao" placeholder="0.0">
+                                    <input type="number" step="0.5" class="form-control" id="maxAvaliacao" name="maxAvaliacao" placeholder="5.0">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="minEconomia" class="form-label small">Economia (Min/Max):</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="number" step="0.01" class="form-control" id="minEconomia" name="minEconomia" placeholder="R$ Min">
+                                    <input type="number" step="0.01" class="form-control" id="maxEconomia" name="maxEconomia" placeholder="R$ Max">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="atributo" class="form-label small">Ordenar por:</label>
+                                <select class="form-select form-select-sm" id="atributo" name="atributo">
+                                    <option value="nome">Nome</option>
+                                    <option value="avaliacao">Avaliação</option>
+                                    <option value="economia">Economia</option>
+                                    <option value="dataVisita">Data</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="ordem" class="form-label small">Ordem:</label>
+                                <select class="form-select form-select-sm" name="ordem" id="ordem">
+                                    <option value="ASC">Crescente</option>
+                                    <option value="DESC">Decrescente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-sm text-white w-100 fw-bold" style="background-color: #589F2E;">Aplicar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 mb-4 shadow" style="background-color: #003575; border: none;">
+                <div class="card-body text-white">
+
+                    <div class="position-relative d-flex align-items-center justify-content-center mb-4">
+                        <h2 class="mb-0 text-center">Lista de Restaurantes</h2>
+                        <a th:href="@{/restaurantes/novo}" class="btn text-white fw-bold position-absolute end-0" style="background-color: #589F2E;">
+                            + Cadastrar
+                        </a>
+                    </div>
+
+                    <div th:if="${msg}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <span th:text="${msg}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <div class="table-responsive rounded overflow-hidden">
+                        <table class="table table-hover table-striped table-light align-middle mb-0">
+                            <thead class="text-white" style="background-color: #0060AD; --bs-table-bg: #0060AD; --bs-table-color: #ffffff;">
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-start">Nome</th>
+                                <th class="text-start">Endereço</th>
+                                <th class="text-center">Economia</th>
+                                <th class="text-center">Avaliação</th>
+                                <th class="text-center">Data Visita</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody class="border-top-0">
+                            <tr th:each="r : ${restaurantes_filtrados != null ? restaurantes_filtrados : restaurantes}">
+                                <td th:text="${r.id}" class="text-center fw-bold"></td>
+                                <td th:text="${r.nome}" class="text-start"></td>
+                                <td th:text="${r.endereco}" class="text-start"></td>
+                                <td th:text="${r.economia != null ? 'R$ ' + #numbers.formatDecimal(r.economia, 1, 'POINT', 2, 'COMMA') : '-'}" class="text-center"></td>
+                                <td th:text="${r.avaliacao}" class="text-center"></td>
+                                <td th:text="${r.dataVisita != null ? #temporals.format(r.dataVisita, 'dd/MM/yyyy') : '-'}" class="text-center"></td>
+                                <td class="text-center">
+                                    <a th:href="@{/restaurantes/editar/{id}(id=${r.id})}"
+                                       class="btn btn-sm btn-primary me-1">
+                                        Editar
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="|#confirmarExclusao-${r.id}|">
+                                        Excluir
+                                    </button>
+
+                                    <div class="modal fade" th:id="|confirmarExclusao-${r.id}|" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content text-dark">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Excluir Restaurante</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                                </div>
+                                                <div class="modal-body text-start">
+                                                    Tem certeza de que deseja excluir o restaurante
+                                                    <strong th:text="${r.nome}"></strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" class="d-inline">
+                                                        <input type="hidden" name="_method" value="delete"/>
+                                                        <button type="submit" class="btn btn-danger">Excluir</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="minAvaliacao">Avaliação Mínima:</label>
-        <input type="number" step="0.5" min="0" max="5" id="minAvaliacao" name="minAvaliacao" placeholder="0.0" />
+</div>
 
-        <label for="maxAvaliacao">Avaliação Máxima:</label>
-        <input type="number" step="0.5" min="0" max="5" id="maxAvaliacao" name="maxAvaliacao" placeholder="5.0" />
-    </div>
-    <div>
-        <label for="minEconomia">Economia Mínima (R$):</label>
-        <input type="number" step="0.01" id="minEconomia" name="minEconomia" placeholder="0,00" />
-
-        <label for="maxEconomia">Economia Máxima (R$):</label>
-        <input type="number" step="0.01" id="maxEconomia" name="maxEconomia" placeholder="0,00" />
-    </div>
-    <div>
-        <label for="minDataVisita">Data Inicial:</label>
-        <input type="date" id="minDataVisita" name="minDataVisita" />
-
-        <label for="maxDataVisita">Data Final:</label>
-        <input type="date" id="maxDataVisita" name="maxDataVisita" />
-    </div>
-
-    <!-- Ordenação -->
-    <div>
-        <label for="atributo">Ordenar por:</label>
-        <select id="atributo" name="atributo">
-            <option value="nome">Nome</option>
-            <option value="avaliacao">Avaliação</option>
-            <option value="economia">Economia</option>
-            <option value="dataVisita">Data da Visita</option>
-        </select>
-        <select name="ordem">
-            <option value="ASC">Crescente (A-Z / Menor para Maior)</option>
-            <option value="DESC">Decrescente (Z-A / Maior para Menor)</option>
-        </select>
-    </div>
-
-    <!-- Submit -->
-    <button type="submit">Aplicar</button>
-    <a th:href="@{/restaurantes/inicio}">Limpar Filtros</a>
-</form>
-
-<a href="./novo">
-    <button type="button">Novo restaurante</button>
-</a>
-
-<p th:if="${msg}" th:text="${msg}"></p>
-
-<!-- Listagem com filtro -->
-<table th:if="${restaurantes_filtrados != null}">
-    <tr>
-        <th>Id</th>
-        <th>Nome</th>
-        <th>Endereço</th>
-        <th>Comentário</th>
-        <th>Economia</th>
-        <th>Avaliação</th>
-        <th>Data Visita</th>
-        <th>Ações</th>
-    </tr>
-    <tr th:each="r : ${restaurantes_filtrados}">
-        <td th:text="${r.id}"></td>
-        <td th:text="${r.nome}"></td>
-        <td th:text="${r.endereco}"></td>
-        <td th:text="${r.comentario}"></td>
-        <td th:text="${r.economia}"></td>
-        <td th:text="${r.avaliacao}"></td>
-        <td th:text="${r.dataVisita}"></td>
-        <td>
-            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}" method="get" style="display:inline;">
-                <button type="submit">Editar</button>
-            </form>
-            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" style="display:inline;">
-                <input type="hidden" name="_method" value="delete"/>
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
-</table>
-
-<!-- Listagem sem filtro -->
-<table th:if="${restaurantes_filtrados == null}">
-    <tr>
-        <th>Id</th>
-        <th>Nome</th>
-        <th>Endereço</th>
-        <th>Comentário</th>
-        <th>Economia</th>
-        <th>Avaliação</th>
-        <th>Data Visita</th>
-        <th>Ações</th>
-    </tr>
-    <tr th:each="r : ${restaurantes}">
-        <td th:text="${r.id}"></td>
-        <td th:text="${r.nome}"></td>
-        <td th:text="${r.endereco}"></td>
-        <td th:text="${r.comentario}"></td>
-        <td th:text="${r.economia}"></td>
-        <td th:text="${r.avaliacao}"></td>
-        <td th:text="${r.dataVisita}"></td>
-        <td>
-            <form th:action="@{/restaurantes/editar/{id}(id=${r.id})}" method="get" style="display:inline;">
-                <button type="submit">Editar</button>
-            </form>
-            <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" style="display:inline;">
-                <input type="hidden" name="_method" value="delete"/>
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
-</table>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
