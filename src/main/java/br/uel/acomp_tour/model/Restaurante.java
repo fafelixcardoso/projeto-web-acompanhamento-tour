@@ -6,11 +6,6 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-
-// Não vamos conseguir testar a validação e o cadastro no banco pq
-// não tem controller ainda, mas acho melhor ir criando assim direto doq fazer
-// td e ir mudando dps
-
 @Entity
 @Table(name = "restaurantes")
 @JsonPropertyOrder({

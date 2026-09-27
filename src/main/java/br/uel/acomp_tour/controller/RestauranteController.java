@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.RuntimeErrorException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class RestauranteController {
     }
 
     @GetMapping("/novo")
-    public String arbirFormulario (Model model){
+    public String abrirFormulario (Model model){
         model.addAttribute("restaurante", new Restaurante());
         return "view/formulario";
     }
@@ -78,19 +79,59 @@ public class RestauranteController {
     }
 
     @PostMapping
-    public String cadastrar(@Valid @ModelAttribute Restaurante restaurante,
-                            BindingResult erros, RedirectAttributes ra) {
+    public String cadastrar(@Valid BindingResult erros, @ModelAttribute Restaurante restaurante
+                            , RedirectAttributes ra) {
         if (erros.hasErrors()) {
             return "view/formulario";
         }
 
-        restauranteService.adicionar(restaurante);
-        ra.addFlashAttribute("msg", "Restaurante cadastrado!");
-        return "redirect:restaurantes/inicio";
+        try {
+            restauranteService.adicionar(restaurante);
+
+            ra.addFlashAttribute("msg", "Restaurante cadastrado!");
+            return "redirect:restaurantes/inicio";
+        }catch(RuntimeException erro){
+            ra.addFlashAttribute("msg_erro", erro.getMessage());
+            return "view/formulario";
+        }
+    }
+
+    @GetMapping("/editar/{id}")
+    public String abrirEdicao(@PathVariable Long id, Model model, RedirectAttributes ra) {
+
+        Restaurante rest_para_editar = restauranteService.buscarPorId(id);
+
+        if(rest_para_editar != null){
+            model.addAttribute("restaurante_edicao", rest_para_editar);
+            return "view/formulario";
+        }else{
+
+            ra.addFlashAttribute("msg", "Restaurante não encontrado para edição!");
+            return "redirect:restaurantes/inicio";
+        }
     }
 
 
-    // Precisamos adicionar os endpoints de delete e update para os botões do formulário funcionarem.
-    // Seria bom tbm testar as validações ou dxar isso redondinho antes de estilizarmos
+    @PutMapping("/{id}")
+    public String atualizar(@PathVariable Long id, @Valid
+                            @ModelAttribute Restaurante restaurante, BindingResult erros,
+                            RedirectAttributes ra) {
+        if (erros.hasErrors()) {
+            return "view/formulario";
+        }
+
+        restauranteService.atualizar(id, restaurante);
+        ra.addFlashAttribute("msg", "Restaurante atualizado!");
+        return "redirect:restautantes/inicio";
+    }
+
+    @DeleteMapping("/{id}")
+    public String excluir(@PathVariable Long id, RedirectAttributes ra) {
+            restauranteService.remover(id);
+
+            ra.addFlashAttribute("msg", "Restaurante excluído!");
+            return "redirect:restaurantes/inicio";
+    }
+
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RestauranteService {
@@ -50,28 +51,28 @@ public class RestauranteService {
         );
     }
 
+    public Restaurante buscarPorId(Long id){
+        return restauranteRepository.findById(id).orElse(null);
+    }
+
     // Add restaurante
-    public Restaurante adicionar(Restaurante r){
+    public void adicionar(Restaurante r){
         if(restauranteRepository.existsByNome(r.getNome())){
             throw new RuntimeException("Restaurante já cadastrado!");
         }
 
-        return restauranteRepository.save(r);
+        restauranteRepository.save(r);
     }
 
     // Remover restaurante
     public void remover(Long id) {
-        if (!restauranteRepository.existsById(id)) {
-            throw new RuntimeException("Restaurante não encontrado com id: " + id);
-        }
-
         restauranteRepository.deleteById(id);
     }
 
     // Att restaurante
-    public Restaurante atualizar(Long id, Restaurante r){
+    public void atualizar(Long id, Restaurante r){
 
-        return restauranteRepository.findById(id).map(
+        restauranteRepository.findById(id).map(
                 r_antigo -> {
                     r_antigo.setNome(r.getNome());
                     r_antigo.setEndereco(r.getEndereco());
@@ -82,9 +83,6 @@ public class RestauranteService {
 
                     return r_antigo;
                 }
-        ).orElseThrow(
-                () -> new RuntimeException("Restaurante não encontrado com id:" + id)
-        );
-
+        ).orElseThrow();
     }
 }
