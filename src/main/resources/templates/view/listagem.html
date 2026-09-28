@@ -30,8 +30,8 @@
                             <div class="col-md-2">
                                 <label for="minAvaliacao" class="form-label small">Avaliação (Min/Max):</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="number" step="0.5" class="form-control" id="minAvaliacao" name="minAvaliacao" placeholder="0.0">
-                                    <input type="number" step="0.5" class="form-control" id="maxAvaliacao" name="maxAvaliacao" placeholder="5.0">
+                                    <input type="number" step="0.1" class="form-control" id="minAvaliacao" name="minAvaliacao" placeholder="0.0">
+                                    <input type="number" step="0.1" class="form-control" id="maxAvaliacao" name="maxAvaliacao" placeholder="5.0">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -70,9 +70,15 @@
 
                     <div class="position-relative d-flex align-items-center justify-content-center mb-4">
                         <h2 class="mb-0 text-center">Lista de Restaurantes</h2>
-                        <a th:href="@{/restaurantes/novo}" class="btn text-white fw-bold position-absolute end-0" style="background-color: #589F2E;">
-                            + Cadastrar
-                        </a>
+
+                        <div class="position-absolute end-0 d-flex gap-2">
+                            <a th:href="@{/restaurantes/novo}" class="btn text-white fw-bold" style="background-color: #589F2E;">
+                                + Cadastrar
+                            </a>
+                            <a th:href="@{/restaurantes/inicio}" class="btn btn-warning fw-bold">
+                                Limpar Filtros
+                            </a>
+                        </div>
                     </div>
 
                     <div th:if="${msg}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -121,12 +127,14 @@
 
                                     <div class="modal fade" th:id="|confirmarExclusao-${r.id}|" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog">
-                                            <div class="modal-content text-dark">
+
+                                            <div class="modal-content bg-white">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Excluir Restaurante</h5>
+                                                    <h5 class="modal-title text-dark">Excluir Restaurante</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                                 </div>
-                                                <div class="modal-body text-start">
+
+                                                <div class="modal-body text-start text-dark text-wrap">
                                                     Tem certeza de que deseja excluir o restaurante
                                                     <strong th:text="${r.nome}"></strong>?
                                                 </div>
