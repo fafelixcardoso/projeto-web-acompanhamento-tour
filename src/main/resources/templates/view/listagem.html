@@ -85,18 +85,18 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
 
-                    <div class="table-responsive rounded overflow-hidden">
+                    <div class="table-responsive rounded">
                         <table class="table table-hover table-striped table-light align-middle mb-0">
                             <thead class="text-white" style="background-color: #0060AD; --bs-table-bg: #0060AD; --bs-table-color: #ffffff;">
                             <tr>
                                 <th class="text-center">ID</th>
                                 <th class="text-start">Nome</th>
                                 <th class="text-start">Endereço</th>
-                                <th class="text-start">Comentario</th>
-                                <th class="text-center">Economia</th>
-                                <th class="text-center">Avaliação</th>
-                                <th class="text-center">Data Visita</th>
-                                <th class="text-center">Ações</th>
+                                <th class="text-start" style="max-width: 220px;">Comentario</th>
+                                <th class="text-center" style="white-space: nowrap;">Economia</th>
+                                <th class="text-center" style="white-space: nowrap;">Avaliação</th>
+                                <th class="text-center" style="white-space: nowrap;">Data Visita</th>
+                                <th class="text-center" style="white-space: nowrap; width: 140px;">Ações</th>
                             </tr>
                             </thead>
                             <tbody class="border-top-0">
@@ -104,11 +104,11 @@
                                 <td th:text="${r.id}" class="text-center fw-bold"></td>
                                 <td th:text="${r.nome}" class="text-start"></td>
                                 <td th:text="${r.endereco}" class="text-start"></td>
-                                <td th:text="${r.comentario}" class="text-start"></td>
-                                <td th:text="${r.economia != null ? 'R$ ' + #numbers.formatDecimal(r.economia, 1, 'POINT', 2, 'COMMA') : '-'}" class="text-center"></td>
-                                <td th:text="${r.avaliacao}" class="text-center"></td>
-                                <td th:text="${r.dataVisita != null ? #temporals.format(r.dataVisita, 'dd/MM/yyyy') : '-'}" class="text-center"></td>
-                                <td class="text-center">
+                                <td th:text="${r.comentario}" class="text-start text-break" style="max-width: 220px;"></td>
+                                <td th:text="${r.economia != null ? 'R$ ' + #numbers.formatDecimal(r.economia, 1, 'POINT', 2, 'COMMA') : '-'}" class="text-center" style="white-space: nowrap;"></td>
+                                <td th:text="${r.avaliacao}" class="text-center" style="white-space: nowrap;"></td>
+                                <td th:text="${r.dataVisita != null ? #temporals.format(r.dataVisita, 'dd/MM/yyyy') : '-'}" class="text-center" style="white-space: nowrap;"></td>
+                                <td class="text-center" style="white-space: nowrap;">
                                     <a th:href="@{/restaurantes/editar/{id}(id=${r.id})}"
                                        class="btn btn-sm btn-primary me-1">
                                         Editar
