@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.management.RuntimeErrorException;
 import java.time.LocalDate;
@@ -116,15 +117,20 @@ public class RestauranteController {
                             @ModelAttribute Restaurante restaurante, BindingResult erros,
                             Model model, RedirectAttributes ra) {
 
-
         if (erros.hasErrors()) {
             model.addAttribute("restaurante", restaurante);
             return "view/formulario";
         }
 
-        restauranteService.atualizar(id, restaurante);
-        ra.addFlashAttribute("msg", "Restaurante atualizado!");
-        return "redirect:./inicio";
+        try {
+            restauranteService.atualizar(id, restaurante);
+            ra.addFlashAttribute("msg", "Restaurante atualizado!");
+            return "redirect:./inicio";
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("restaurante", restaurante);
+            model.addAttribute("msg_erro", "Restaurante já cadastrado com este nome!");
+            return "view/formulario";
+        }
     }
 
     @DeleteMapping("/{id}")
