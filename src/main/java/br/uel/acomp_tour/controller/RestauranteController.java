@@ -112,7 +112,7 @@ public class RestauranteController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/editar/{id}")
     public String atualizar(@PathVariable Long id, @Valid
                             @ModelAttribute Restaurante restaurante, BindingResult erros,
                             Model model, RedirectAttributes ra) {
@@ -124,11 +124,12 @@ public class RestauranteController {
 
         try {
             restauranteService.atualizar(id, restaurante);
+
             ra.addFlashAttribute("msg", "Restaurante atualizado!");
-            return "redirect:./inicio";
-        } catch (DataIntegrityViolationException e) {
+            return "redirect:../inicio";
+        } catch (RuntimeException e) {
             model.addAttribute("restaurante", restaurante);
-            model.addAttribute("msg_erro", "Restaurante já cadastrado com este nome!");
+            model.addAttribute("msg_erro", e.getMessage());
             return "view/formulario";
         }
     }

@@ -71,13 +71,13 @@
                         </div>
 
                         <div class="d-flex gap-2 float-end">
-                            <a th:href="@{/restaurantes/inicio}" class="btn btn-outline-light">Cancelar</a>
+                            <a th:href="@{/restaurantes/inicio}" class="btn btn-danger fw-bold">Cancelar</a>
                             <button type="submit" class="btn text-white fw-bold" style="background-color: #589F2E;">Cadastrar</button>
                         </div>
                     </form>
 
                     <form th:if="${restaurante.id} != null"
-                          th:action="@{/restaurantes/{id}(id=${restaurante.id})}"
+                          th:action="@{/restaurantes/editar/{id}(id=${restaurante.id})}"
                           th:method="put" th:object="${restaurante}"
                           class="col-md-10 mx-auto mt-4">
 
@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="d-flex gap-2 float-end">
-                            <a th:href="@{/restaurantes/inicio}" class="btn btn-outline-light">Cancelar</a>
+                            <a th:href="@{/restaurantes/inicio}" class="btn btn-danger fw-bold">Cancelar</a>
                             <button type="submit" class="btn text-white fw-bold" style="background-color: #589F2E;">Atualizar</button>
                         </div>
                     </form>

@@ -58,7 +58,7 @@ public class RestauranteService {
     // Add restaurante
     public void adicionar(Restaurante r){
         if(restauranteRepository.existsByNome(r.getNome())){
-            throw new RuntimeException("Restaurante já cadastrado!");
+            throw new RuntimeException("Restaurante já cadastrado com esse nome!");
         }
 
         restauranteRepository.save(r);
@@ -71,6 +71,10 @@ public class RestauranteService {
 
     // Att restaurante
     public void atualizar(Long id, Restaurante r){
+        if(restauranteRepository.existsByNomeAndIdNot(r.getNome(), id)){
+            throw new RuntimeException("Restaurante já cadastrado com esse nome!");
+        }
+
 
         Restaurante restaurante_novo = restauranteRepository.findById(id).map(
                 r_antigo -> {
@@ -85,7 +89,7 @@ public class RestauranteService {
                 }
         ).orElseThrow();
 
-        
+
         restauranteRepository.save(restaurante_novo);
     }
 }
