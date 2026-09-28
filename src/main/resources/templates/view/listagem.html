@@ -80,6 +80,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
 
+                    <div th:if="${msg_erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span th:text="${msg_erro}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
                     <div class="table-responsive rounded overflow-hidden">
                         <table class="table table-hover table-striped table-light align-middle mb-0">
                             <thead class="text-white" style="background-color: #0060AD; --bs-table-bg: #0060AD; --bs-table-color: #ffffff;">
@@ -87,6 +92,7 @@
                                 <th class="text-center">ID</th>
                                 <th class="text-start">Nome</th>
                                 <th class="text-start">Endereço</th>
+                                <th class="text-start">Comentario</th>
                                 <th class="text-center">Economia</th>
                                 <th class="text-center">Avaliação</th>
                                 <th class="text-center">Data Visita</th>
@@ -98,6 +104,7 @@
                                 <td th:text="${r.id}" class="text-center fw-bold"></td>
                                 <td th:text="${r.nome}" class="text-start"></td>
                                 <td th:text="${r.endereco}" class="text-start"></td>
+                                <td th:text="${r.comentario}" class="text-start"></td>
                                 <td th:text="${r.economia != null ? 'R$ ' + #numbers.formatDecimal(r.economia, 1, 'POINT', 2, 'COMMA') : '-'}" class="text-center"></td>
                                 <td th:text="${r.avaliacao}" class="text-center"></td>
                                 <td th:text="${r.dataVisita != null ? #temporals.format(r.dataVisita, 'dd/MM/yyyy') : '-'}" class="text-center"></td>
@@ -125,8 +132,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                    <form th:action="@{/restaurantes/{id}(id=${r.id})}" method="post" class="d-inline">
-                                                        <input type="hidden" name="_method" value="delete"/>
+                                                    <form th:action="@{/restaurantes/{id}(id=${r.id})}" th:method="delete" class="d-inline">
                                                         <button type="submit" class="btn btn-danger">Excluir</button>
                                                     </form>
                                                 </div>

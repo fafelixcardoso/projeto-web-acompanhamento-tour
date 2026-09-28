@@ -68,7 +68,7 @@ public class RestauranteController {
         );
 
         if(resultados.isEmpty()){
-            ra.addFlashAttribute("msg", "Nada encontrado!");
+            ra.addFlashAttribute("msg_erro", "Nada encontrado!");
             return "redirect:../inicio";
         }
 
@@ -78,9 +78,9 @@ public class RestauranteController {
         return "redirect:../inicio";
     }
 
-    @PostMapping
-    public String cadastrar(@Valid BindingResult erros, @ModelAttribute Restaurante restaurante
-                            , RedirectAttributes ra) {
+    @PostMapping("/novo")
+    public String cadastrar(@Valid @ModelAttribute Restaurante restaurante,
+                            BindingResult erros, Model model, RedirectAttributes ra) {
         if (erros.hasErrors()) {
             return "view/formulario";
         }
@@ -89,9 +89,9 @@ public class RestauranteController {
             restauranteService.adicionar(restaurante);
 
             ra.addFlashAttribute("msg", "Restaurante cadastrado!");
-            return "redirect:restaurantes/inicio";
+            return "redirect:./inicio";
         }catch(RuntimeException erro){
-            ra.addFlashAttribute("msg_erro", erro.getMessage());
+            model.addAttribute("msg_erro", erro.getMessage());
             return "view/formulario";
         }
     }
@@ -102,12 +102,11 @@ public class RestauranteController {
         Restaurante rest_para_editar = restauranteService.buscarPorId(id);
 
         if(rest_para_editar != null){
-            model.addAttribute("restaurante_edicao", rest_para_editar);
+            model.addAttribute("restaurante", rest_para_editar);
             return "view/formulario";
         }else{
-
-            ra.addFlashAttribute("msg", "Restaurante não encontrado para edição!");
-            return "redirect:restaurantes/inicio";
+            ra.addFlashAttribute("msg_erro", "Restaurante não encontrado para edição!");
+            return "redirect:../inicio";
         }
     }
 
@@ -115,14 +114,17 @@ public class RestauranteController {
     @PutMapping("/{id}")
     public String atualizar(@PathVariable Long id, @Valid
                             @ModelAttribute Restaurante restaurante, BindingResult erros,
-                            RedirectAttributes ra) {
+                            Model model, RedirectAttributes ra) {
+
+
         if (erros.hasErrors()) {
+            model.addAttribute("restaurante", restaurante);
             return "view/formulario";
         }
 
         restauranteService.atualizar(id, restaurante);
         ra.addFlashAttribute("msg", "Restaurante atualizado!");
-        return "redirect:restautantes/inicio";
+        return "redirect:./inicio";
     }
 
     @DeleteMapping("/{id}")
@@ -130,7 +132,7 @@ public class RestauranteController {
             restauranteService.remover(id);
 
             ra.addFlashAttribute("msg", "Restaurante excluído!");
-            return "redirect:restaurantes/inicio";
+            return "redirect:./inicio";
     }
 
 

@@ -3,6 +3,7 @@ package br.uel.acomp_tour.model;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -40,6 +41,7 @@ public class Restaurante {
     private Float avaliacao;
 
     @PastOrPresent(message = "A data da visita não pode estar no futuro")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataVisita;
 
 
@@ -52,6 +54,7 @@ public class Restaurante {
     public Float getAvaliacao(){ return avaliacao; }
     public LocalDate getDataVisita(){ return dataVisita; }
 
+    public void setId(Long id){ this.id = id; }
     public void setNome(String nome){ this.nome = nome; }
     public void setEndereco(String endereco){ this.endereco = endereco; }
     public void setComentario(String comentario){ this.comentario = comentario; }

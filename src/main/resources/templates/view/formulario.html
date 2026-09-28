@@ -22,7 +22,7 @@
                     <h2 class="text-center mb-4" th:text="${restaurante.id} != null ? 'Editar Restaurante' : 'Novo Restaurante'"></h2>
 
                     <form th:if="${restaurante.id} == null"
-                          th:action="@{/restaurantes}" method="post" th:object="${restaurante}"
+                          th:action="@{/restaurantes/novo}" method="post" th:object="${restaurante}"
                           class="col-md-10 mx-auto mt-4">
 
                         <div class="mb-3">
@@ -56,13 +56,18 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="dataVisita" class="form-label"><strong>Data da Visita:</strong></label>
-                                <input th:field="*{dataVisita}" id="dataVisita" type="date" class="form-control">
+                                <input th:field="*{dataVisita}" max="9999-12-31"  id="dataVisita" type="date" class="form-control">
                                 <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <div class="small"><p class="form-text text-white-50">* Campos obrigatórios</p></div>
+                        </div>
+
+                        <div th:if="${msg_erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${msg_erro}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
                         <div class="d-flex gap-2 float-end">
@@ -72,11 +77,10 @@
                     </form>
 
                     <form th:if="${restaurante.id} != null"
-                          th:action="@{/restaurantes}"
-                          method="post" th:object="${restaurante}"
+                          th:action="@{/restaurantes/{id}(id=${restaurante.id})}"
+                          th:method="put" th:object="${restaurante}"
                           class="col-md-10 mx-auto mt-4">
 
-                        <input type="hidden" name="_method" value="put"/>
                         <input type="hidden" th:field="*{id}"/>
 
                         <div class="mb-3">
@@ -110,13 +114,18 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="dataVisitaEdit" class="form-label"><strong>Data da Visita:</strong></label>
-                                <input th:field="*{dataVisita}" id="dataVisitaEdit" type="date" class="form-control">
+                                <input max="9999-12-31" th:field="*{dataVisita}" id="dataVisitaEdit" type="date" class="form-control">
                                 <div class="text-warning small mt-1 fw-semibold" th:if="${#fields.hasErrors('dataVisita')}" th:errors="*{dataVisita}"></div>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <div class="small"><p class="form-text text-white-50">* Campos obrigatórios</p></div>
+                        </div>
+
+                        <div th:if="${msg_erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${msg_erro}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
 
                         <div class="d-flex gap-2 float-end">

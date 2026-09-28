@@ -72,7 +72,7 @@ public class RestauranteService {
     // Att restaurante
     public void atualizar(Long id, Restaurante r){
 
-        restauranteRepository.findById(id).map(
+        Restaurante restaurante_novo = restauranteRepository.findById(id).map(
                 r_antigo -> {
                     r_antigo.setNome(r.getNome());
                     r_antigo.setEndereco(r.getEndereco());
@@ -84,5 +84,8 @@ public class RestauranteService {
                     return r_antigo;
                 }
         ).orElseThrow();
+
+        
+        restauranteRepository.save(restaurante_novo);
     }
 }
